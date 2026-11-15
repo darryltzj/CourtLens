@@ -689,7 +689,7 @@ Washington Wizards|Jamir Watkins|G|2 Apr|Out</script>
 <script>
 /* ===== static data ===== */
 const TEAMS={ATL:['Atlanta','Hawks'],BOS:['Boston','Celtics'],BKN:['Brooklyn','Nets'],CHA:['Charlotte','Hornets'],CHI:['Chicago','Bulls'],CLE:['Cleveland','Cavaliers'],DAL:['Dallas','Mavericks'],DEN:['Denver','Nuggets'],DET:['Detroit','Pistons'],GSW:['Golden State','Warriors'],HOU:['Houston','Rockets'],IND:['Indiana','Pacers'],LAC:['LA','Clippers'],LAL:['Los Angeles','Lakers'],MEM:['Memphis','Grizzlies'],MIA:['Miami','Heat'],MIL:['Milwaukee','Bucks'],MIN:['Minnesota','Timberwolves'],NOP:['New Orleans','Pelicans'],NYK:['New York','Knicks'],OKC:['Oklahoma City','Thunder'],ORL:['Orlando','Magic'],PHI:['Philadelphia','76ers'],PHX:['Phoenix','Suns'],POR:['Portland','Trail Blazers'],SAC:['Sacramento','Kings'],SAS:['San Antonio','Spurs'],TOR:['Toronto','Raptors'],UTA:['Utah','Jazz'],WAS:['Washington','Wizards']};
-/* Season offensive / defensive rating (points per 100 possessions) — StatMuse, 2026-27 through Nov 14 */
+/* Season offensive / defensive rating (points per 100 possessions) — 2026-27 through Nov 14 */
 const RTG={"BOS": [119.2, 107.6], "NYK": [115.2, 108.8], "GSW": [117.7, 113.4], "DET": [115.7, 110.3], "LAL": [122.7, 114.7], "SAC": [107.7, 120.4], "PHI": [112.0, 110.2], "ATL": [114.2, 112.9], "WAS": [110.0, 115.8], "CHI": [110.1, 121.0], "SAS": [120.4, 107.0], "DEN": [117.5, 115.6], "IND": [111.0, 113.0], "BKN": [110.5, 116.8], "HOU": [120.3, 111.2], "OKC": [113.0, 109.2], "MIL": [107.7, 121.9], "PHX": [113.7, 118.2], "LAC": [111.6, 116.8], "CLE": [117.8, 116.2], "POR": [120.4, 112.6], "UTA": [106.6, 117.6], "DAL": [114.0, 113.8], "NOP": [112.4, 121.2], "MIA": [115.4, 116.5], "CHA": [103.2, 114.8], "TOR": [115.3, 113.9], "ORL": [109.7, 114.2], "MEM": [120.4, 111.5], "MIN": [116.9, 105.5]};
 let SCHED=[];
 
@@ -750,7 +750,7 @@ const LG=(()=>{const TL=Object.values(T);return{o:TL.reduce((s,t)=>s+t.ortg,0)/3
 const nextFor=a=>SCHED.find(g=>(g.a===a||g.h===a)&&g.t>NOW-3*3600e3);
 
 
-/* ===== injuries (ESPN, Nov 15 2026) ===== */
+/* ===== injuries (Nov 15 2026) ===== */
 const normN=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/\b(jr|sr|ii|iii|iv)\b\.?/g,'').replace(/[^a-z]/g,'');
 const ABBR_FULL=Object.fromEntries(Object.entries(TEAMS).map(([a,v])=>[v.join(' '),a]));
 const MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
@@ -800,7 +800,7 @@ function impactCard(t,g){
 function vInjuries(){
   const teams=Object.keys(TEAMS).map(t=>({t,list:INJ.filter(i=>i.t===t)})).filter(x=>x.list.length).sort((a,b)=>b.list.filter(i=>i.st==='Out'&&isStar(i.p)).length-a.list.filter(i=>i.st==='Out'&&isStar(i.p)).length||full(a.t).localeCompare(full(b.t)));
   const starsOut=INJ.filter(i=>i.st==='Out'&&isStar(i.p));
-  return`<h2>Injuries</h2><p class="sub">From ESPN's NBA injury report. ★ marks star players: over 15 points, 5 assists or 5 rebounds a game this season.</p>
+  return`<h2>Injuries</h2><p class="sub">From the NBA injury report. ★ marks star players: over 15 points, 5 assists or 5 rebounds a game this season.</p>
   <div class="card"><h3>Stars out (${starsOut.length})</h3>${starsOut.length?`<div class="row">${starsOut.map(i=>`<a class="chip down" style="cursor:pointer" data-nav="#player-${i.p.id}">${esc(i.p.name)} · ${i.t} · back ~${i.ret}</a>`).join('')}</div>`:'<div class="empty">None.</div>'}</div>
   ${teams.map(({t,list})=>`<div class="card tw"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${tlink(t)}</h3>${(()=>{const n=nextFor(t);return n?`<span class="note">Next: ${n.h===t?'vs':'@'} ${n.h===t?n.a:n.h} · ${dLong(n.t)}</span>`:''})()}</div>
    <table style="margin-top:8px"><thead><tr><th>Player</th><th class="l">Pos</th><th class="l">Status</th><th class="l">Est. return</th><th>GP</th><th>PTS</th><th>REB</th><th>AST</th><th>MIN</th></tr></thead><tbody>
@@ -845,7 +845,7 @@ function vTeams(){
     <td class="num">${f1(t.ortg)} ${rankChip(t.ork)}</td><td class="num">${f1(t.drtg)} ${rankChip(t.drk)}</td>
     <td class="num"><b>${sgn(t.net)}</b></td><td class="num">${f1(t.pace)}</td><td class="num">${f1(t.ppg)}</td><td class="num">${f1(t.oppg)}</td>
     <td>${dchip(t.l5net,true,1)}</td><td class="l">${g?`${g.h===t.abbr?'vs':'@'} ${g.h===t.abbr?g.a:g.h} · ${dLong(g.t)}`:'—'}</td></tr>`}).join('')}</tbody></table>
-   <div class="legend">Ranks: green = top 10, red = bottom 10. Pace and last-5 figures are calculated from NBA.com box scores.</div></div>
+   <div class="legend">Ranks: green = top 10, red = bottom 10. Pace and last-5 figures are calculated from box scores.</div></div>
   <div class="card"><h3>Offense vs defense</h3>${scatter(TL)}<div class="legend">Up and to the right = good at both ends. Dashed lines = league average. Click a team.</div></div>`;
 }
 function scatter(TL){
@@ -865,7 +865,7 @@ function scatter(TL){
 function vSchedule(){
   let out='',cur='';
   SCHED.filter(g=>g.t>NOW-3*3600e3).forEach(g=>{const k=dLong(g.t);if(k!==cur){cur=k;out+=`<div class="date">${g.t.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}</div>`}out+=gameCard(g)});
-  return`<h2>Upcoming games</h2><p class="sub">From the NBA.com schedule. Times are in your local time zone (Eastern time in brackets). Click a game for the matchup.</p>${out||'<div class="empty">No upcoming games in the loaded schedule — the data needs a refresh.</div>'}`;
+  return`<h2>Upcoming games</h2><p class="sub">Times are in your local time zone (Eastern time in brackets). Click a game for the matchup.</p>${out||'<div class="empty">No upcoming games in the loaded schedule — the data needs a refresh.</div>'}`;
 }
 function rotation(a){return PL.filter(p=>p.team===a).sort((x,y)=>y.avg.min-x.avg.min)}
 function vGame(id){
@@ -899,7 +899,7 @@ function vTeam(a){
   <div class="grid2">
    <div class="card tw"><h3>Results</h3><table><thead><tr><th>Date</th><th class="l">Opponent</th><th>Result</th><th>Off rtg</th><th>Def rtg</th></tr></thead><tbody>
    ${[...t.games].reverse().map(x=>{const o=100*x.pts/x.poss,d=100*x.opp/x.poss;return`<tr><td>${gDate('26'+x.d).replace(', 2026','')}</td><td class="l">${x.h?'vs':'@'} ${tlink(x.o)}</td><td class="num"><b style="color:${x.wl==='W'?'var(--good)':'var(--bad)'}">${x.wl}</b> ${x.pts}-${x.opp}</td><td class="num">${f1(o)} ${dchip(o-t.ortg,true,2)}</td><td class="num">${f1(d)} ${dchip(d-t.drtg,false,2)}</td></tr>`}).join('')}
-   </tbody></table><div class="legend">Single-game ratings from NBA.com box scores. Chips compare each game with the season rating.</div></div>
+   </tbody></table><div class="legend">Single-game ratings from box scores. Chips compare each game with the season rating.</div></div>
    <div class="card tw"><h3>Roster</h3><table><thead><tr><th>Player</th><th>GP</th><th>MIN</th><th>PTS</th><th>REB</th><th>AST</th><th>TS%</th><th class="l">Form</th></tr></thead><tbody>
    ${R.map(p=>{const fm=form(p);return`<tr class="click" data-nav="#player-${p.id}"><td>${esc(p.name)}</td><td class="num">${p.gp}</td><td class="num">${f1(p.avg.min)}</td><td class="num"><b>${f1(p.avg.pts)}</b></td><td class="num">${f1(p.avg.reb)}</td><td class="num">${f1(p.avg.ast)}</td><td class="num">${pct(ts(p.tot))}</td><td class="l"><span class="chip ${fm.c}">${fm.t}</span></td></tr>`}).join('')}
    </tbody></table></div></div>`;
@@ -966,7 +966,7 @@ function vPlayer(id){
      ${vr.length?`<div style="margin-top:12px">${logTable(p,vr,false,true)}</div><div class="grid2" style="margin-top:12px"><div>${cmpTable(p,vr,'vs '+cur)}</div><div class="note" style="padding-top:8px">Regular-season games from 2024-25 onward, most recent first. Older meetings may have been played for a different team.${vr.length<3?` Only ${vr.length} game${vr.length>1?'s':''} found in that window.`:''}</div></div>`
        :`<div class="empty" style="margin-top:12px">No regular-season games against the ${esc(nick(cur))} since 2024-25.</div>`}</div>`:`<div class="card"><div class="empty">No upcoming games in the loaded schedule.</div></div>`;
   return`<span class="back" data-nav="#players">← All players</span>
-  <h2>${esc(p.name)} ${isStar(p)?'<span class="chip" style="background:#fde68a;color:#92400e;font-size:13px">★ star</span>':''}</h2>${INJP[p.id]?`<div class="card" style="background:#fef2f2;border-color:#fecaca"><b>${INJP[p.id].st==='Out'?'Out':'Day-to-day'}</b> on ESPN's injury report · estimated return ${INJP[p.id].ret}</div>`:''}<p class="sub">${tlink(p.team)} · ${p.gp} games played${g?` · Next: <a class="link" data-nav="#game-${g.id}">${g.h===p.team?'vs':'@'} ${esc(full(g.h===p.team?g.a:g.h))}, ${dLong(g.t)} ${tLocal(g.t)}</a>`:''}</p>
+  <h2>${esc(p.name)} ${isStar(p)?'<span class="chip" style="background:#fde68a;color:#92400e;font-size:13px">★ star</span>':''}</h2>${INJP[p.id]?`<div class="card" style="background:#fef2f2;border-color:#fecaca"><b>${INJP[p.id].st==='Out'?'Out':'Day-to-day'}</b> on the injury report · estimated return ${INJP[p.id].ret}</div>`:''}<p class="sub">${tlink(p.team)} · ${p.gp} games played${g?` · Next: <a class="link" data-nav="#game-${g.id}">${g.h===p.team?'vs':'@'} ${esc(full(g.h===p.team?g.a:g.h))}, ${dLong(g.t)} ${tLocal(g.t)}</a>`:''}</p>
   <div class="kpis">${kp.map(([l,k])=>`<div class="kpi"><div class="l">${l}</div><div class="v">${f1(p.avg[k])}</div><div class="s">season avg</div></div>`).join('')}
    <div class="kpi"><div class="l">FG% / 3P%</div><div class="v" style="font-size:16px">${pct(p.tot.fgm/p.tot.fga)}</div><div class="s">3P ${pct(p.tot.tpm/p.tot.tpa)}</div></div>
    <div class="kpi"><div class="l">TS%</div><div class="v" style="font-size:16px">${pct(ts(p.tot))}</div><div class="s">FT ${pct(p.tot.ftm/p.tot.fta)}</div></div>
@@ -1034,7 +1034,7 @@ function calcOut(){
   if(!g)return`<div class="empty">No upcoming game for ${esc(p.team)} in the loaded schedule.</div>`;
   if(!isFinite(ln))return`<div class="empty">Enter a line, e.g. ${(Math.floor(sv(p.avg,k))+0.5).toFixed(1)}.</div>`;
   const st=stOf(p,g),opp=g.h===p.team?g.a:g.h;
-  if(st==='out')return`<div class="empty"><b>${esc(p.name)} is listed Out</b> for ${g.h===p.team?'vs':'@'} ${opp} on ${dLong(g.t)} (ESPN, back ~${INJP[p.id].ret}). No projection.</div>`;
+  if(st==='out')return`<div class="empty"><b>${esc(p.name)} is listed Out</b> for ${g.h===p.team?'vs':'@'} ${opp} on ${dLong(g.t)} (back ~${INJP[p.id].ret}). No projection.</div>`;
   const pr=pproj(p,g,k),pm=pOver(pr,k,ln),po=pFinal(p,pr,k,ln),pw=CALC.side==='over'?po:1-po,side=CALC.side==='over'?'Over':'Under';
   const vr=p.vs[opp]||[],l10=p.l10,vals=l10.map(r=>sv(r,k));
   const hitS=(rows)=>{const n=rows.filter(r=>CALC.side==='over'?sv(r,k)>ln:sv(r,k)<ln).length;return rows.length?`${n} of ${rows.length} (${Math.round(n/rows.length*100)}%)`:'no games'};
@@ -1048,7 +1048,7 @@ function calcOut(){
   why.push(`Spread: ${S.dist==='p'?`counts like this are modelled with a Poisson curve around ${f1(pr.proj)}`:`his game-to-game swing this season is about ±${f1(pr.sd)}, so the result is modelled as a bell curve around ${f1(pr.proj)}`}, which puts ${side.toLowerCase()} ${ln} at ${Math.round((CALC.side==='over'?pm:1-pm)*100)}%.`);
   why.push(`Reality check: that is blended (75/25) with how often he has actually gone ${side.toLowerCase()} ${ln} this season (${hitS(p.log)}), giving <b>${Math.round(pw*100)}% for ${side.toLowerCase()} ${ln}</b>.`);
   const flags=[];
-  if(st==='q')flags.push(`⚠️ He's listed <b>day-to-day</b> on ESPN. The projection assumes he plays normal minutes — if he's limited or sits, this number doesn't apply.`);
+  if(st==='q')flags.push(`⚠️ He's listed <b>day-to-day</b>. The projection assumes he plays normal minutes — if he's limited or sits, this number doesn't apply.`);
   if(Math.abs(minL-minS)>=3)flags.push(`Minutes are ${minL>minS?'up':'down'} lately: ${f1(minL)} a game in his last ${l10.length} vs ${f1(minS)} for the season.`);
   if(fm.t==='Hot'||fm.t==='Cold')flags.push(`Recent form: <b>${fm.t.toLowerCase()}</b> (last 5 games ${fm.t==='Hot'?'above':'below'} his usual level).`);
   if(p.gp<6)flags.push(`Small sample: only ${p.gp} games this season, so treat this with extra caution.`);
@@ -1108,7 +1108,7 @@ function vProj(id){
   ${det}<div class="grid2">${tbl(g.a)}${tbl(g.h)}</div>
   ${(()=>{const q=[g.a,g.h].flatMap(t=>PL.filter(p=>p.team===t&&stOf(p,g)==='q'));return q.length?`<div class="card note"><b>Questionable (Q):</b> ${q.map(p=>esc(p.name)).join(', ')}: listed day-to-day or due back on game day. Their projections assume they play.</div>`:''})()}
   ${out.length?`<div class="card note">Left out because they haven't played in their team's last 3 games (likely injured or out of the rotation): ${out.map(p=>esc(p.name)).join(', ')}.</div>`:''}
-  <div class="card note"><b>How to read this.</b> Each projection weights season average 50%, last 10 games 35% and the last 3 meetings with this opponent up to 15%. Each chance is 75% from the model's curve and 25% from how often the player has actually cleared that line this season. It then adjusts for the expected pace of the game, and for points and 3-pointers, the opponent's defensive rating. Players listed Out on ESPN's injury report are removed, and their teammates' numbers and the team's ratings are adjusted, so the projection already takes the absences into account. It can't see rest days, minutes limits or late lineup changes. It also hasn't been tested against past results, so treat the percentages as rough estimates, not a forecast.</div>`;
+  <div class="card note"><b>How to read this.</b> Each projection weights season average 50%, last 10 games 35% and the last 3 meetings with this opponent up to 15%. Each chance is 75% from the model's curve and 25% from how often the player has actually cleared that line this season. It then adjusts for the expected pace of the game, and for points and 3-pointers, the opponent's defensive rating. Players listed Out on the injury report are removed, and their teammates' numbers and the team's ratings are adjusted, so the projection already takes the absences into account. It can't see rest days, minutes limits or late lineup changes. It also hasn't been tested against past results, so treat the percentages as rough estimates, not a forecast.</div>`;
 }
 function lineRes(p,pr,k,ln){const po=pFinal(p,pr,k,ln),vr=p.vs[pr.opp]||[];
   const hr=(lab,rows)=>`<tr><td class="l">${lab}</td><td class="num">${rows.length?Math.round(hit(rows,k,ln)*100)+'%':'—'}</td><td class="note">${rows.length?rows.filter(r=>sv(r,k)>ln).length+' of '+rows.length:''}</td></tr>`;
