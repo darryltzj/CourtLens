@@ -3,86 +3,99 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NBA Stats Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<title>CourtLens</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f4f5f7;--card:#fff;--ink:#121620;--muted:#6b7280;--line:#e5e7eb;--accent:#c2410c;--good:#15803d;--goodbg:#dcfce7;--bad:#b91c1c;--badbg:#fee2e2;--flatbg:#f1f5f9;--head:#0f172a}
+:root{--bg:#eceeea;--card:#fafaf8;--ink:#17202b;--muted:#5d6670;--line:#d6dad3;--accent:#e35a12;--paint:#fbe9dc;--good:#1e7a46;--goodbg:#dcefe2;--bad:#b4232c;--badbg:#f8e0e0;--flatbg:#e6e9e4;--head:#1a2b45;--headsoft:#b7c2d3;--cond:'Barlow Condensed','Arial Narrow',sans-serif}
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
-header{background:var(--head);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
-header h1{font-size:17px;margin:0;font-weight:800;letter-spacing:-.01em}
-header h1 span{color:#fb923c}
-nav{display:flex;gap:4px;flex-wrap:wrap}
-nav a{color:#cbd5e1;text-decoration:none;padding:7px 12px;border-radius:7px;font-weight:600;cursor:pointer}
-nav a:hover{background:#1e293b;color:#fff}
-nav a.on{background:#fb923c;color:#111}
-.asof{margin-left:auto;font-size:12px;color:#94a3b8}
-main{max-width:1200px;margin:0 auto;padding:20px}
-h2{font-size:22px;margin:4px 0 4px;letter-spacing:-.02em}
-h3{font-size:13px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-.sub{color:var(--muted);margin:0 0 18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+body{margin:0;font-family:Barlow,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.4;font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+header{background:var(--head);color:#fff;padding:0 20px;display:flex;align-items:stretch;gap:28px;flex-wrap:wrap;position:sticky;top:0;z-index:5;border-bottom:3px solid var(--accent)}
+header h1{font-family:var(--cond);font-style:italic;font-weight:800;font-size:27px;margin:0;padding:9px 0 7px;letter-spacing:.005em;line-height:1}
+nav{display:flex;gap:2px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+nav a{font-family:var(--cond);font-size:18px;font-weight:600;color:var(--headsoft);text-decoration:none;padding:12px 12px 9px;cursor:pointer;position:relative;white-space:nowrap}
+nav a:hover{color:#fff}
+nav a.on{color:#fff}
+nav a.on::after{content:'';position:absolute;left:8px;right:8px;bottom:-3px;height:6px;background:var(--accent);border-radius:3px 3px 0 0}
+.asof{margin-left:auto;align-self:center;font-size:13px;color:var(--headsoft)}
+@media(max-width:700px){header{gap:0 16px;padding:0 16px}header h1{font-size:24px}nav{order:3;width:100%;margin:0 -12px}.asof{margin-left:0;font-size:12px;flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}main{padding:18px 16px 40px}h2{font-size:30px}.card{padding:14px}}
+main{max-width:1200px;margin:0 auto;padding:24px 20px 48px}
+h2{font-family:var(--cond);font-size:36px;font-weight:700;line-height:1.05;margin:4px 0 6px}
+h3{font-family:var(--cond);font-size:20px;font-weight:600;margin:0 0 10px;color:var(--ink)}
+.sub{color:var(--muted);margin:0 0 20px;max-width:72ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px 18px;margin-bottom:16px;overflow-x:auto}
+.grid2>*,.mh>*{min-width:0}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:860px){.grid2{grid-template-columns:1fr}}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:10px;margin-bottom:16px}
-.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-.kpi .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-.kpi .v{font-size:21px;font-weight:800;font-family:'JetBrains Mono',monospace;margin-top:2px}
-.kpi .s{font-size:12px;color:var(--muted)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:4px 20px;margin-bottom:20px}
+.kpi{border-top:2px solid var(--ink);padding:8px 0 4px}
+.kpi .l{font-size:13px;color:var(--muted);font-weight:500}
+.kpi .v{font-family:var(--cond);font-size:32px;font-weight:700;line-height:1.05;margin-top:2px}
+.kpi .s{font-size:13px;color:var(--muted)}
+.card .kpi,.row>.kpi{background:var(--card);border:1px solid var(--line);border-top:2px solid var(--ink);border-radius:0 0 6px 6px;padding:8px 12px}
 .tw{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
-th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:right;padding:8px;border-bottom:2px solid var(--line);white-space:nowrap;font-weight:700}
+table{border-collapse:collapse;width:100%}
+th{font-family:var(--cond);font-size:15px;font-weight:600;color:var(--muted);text-align:right;padding:6px 8px;border-bottom:2px solid var(--ink);white-space:nowrap}
 td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
 th:first-child,td:first-child,th.l,td.l{text-align:left}
-tr.avg td{background:#f8fafc;font-weight:700}
+tbody tr:last-child td{border-bottom:0}
+tr.avg td{background:var(--flatbg);font-weight:700}
 tr.click{cursor:pointer}
-tr.click:hover td{background:#fafafa}
-tr.sel td{background:#fff7ed!important}
-.num{font-family:'JetBrains Mono',monospace;font-size:13px}
-.chip{display:inline-block;padding:2px 7px;border-radius:999px;font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace}
+tr.click:hover td{background:#f1f2ee}
+tr.sel td{background:var(--paint)!important}
+.num{font-size:14px}
+.chip{display:inline-block;padding:1px 6px;border-radius:3px;font-size:12px;font-weight:600}
 .up{background:var(--goodbg);color:var(--good)}
 .down{background:var(--badbg);color:var(--bad)}
-.flat{background:var(--flatbg);color:#475569}
-.tabbr{display:inline-block;min-width:38px;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--accent)}
-.link{color:var(--ink);font-weight:600;cursor:pointer;border-bottom:1px dotted #9ca3af}
-.link:hover{color:var(--accent)}
-.back{color:var(--muted);cursor:pointer;font-weight:600;display:inline-block;margin-bottom:8px}
+.flat{background:var(--flatbg);color:#4a535c}
+.tabbr{display:inline-block;min-width:38px;font-family:var(--cond);font-size:16px;font-weight:700;color:var(--accent)}
+.link{color:var(--ink);font-weight:600;cursor:pointer;text-decoration:underline;text-decoration-color:#a9b0a6;text-underline-offset:3px}
+.link:hover{color:var(--accent);text-decoration-color:currentColor}
+.back{color:var(--muted);cursor:pointer;font-weight:600;display:inline-block;margin-bottom:6px}
 .back:hover{color:var(--accent)}
-.verdict{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:8px;font-weight:700}
-.bar{position:relative;height:12px;background:#f1f5f9;border-radius:6px;width:200px}
-.bar .g{position:absolute;left:0;top:0;bottom:0;border-radius:6px}
-.bar .a{position:absolute;top:-3px;bottom:-3px;width:2px;background:#111}
-.legend{font-size:12px;color:var(--muted);display:flex;gap:14px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.verdict{display:inline-flex;align-items:center;gap:8px;padding:5px 10px;border-radius:4px;font-weight:600}
+.bar{position:relative;height:10px;background:var(--flatbg);border-radius:5px;width:200px;max-width:100%}
+.bar .g{position:absolute;left:0;top:0;bottom:0;border-radius:5px}
+.bar .a{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.legend{font-size:13px;color:var(--muted);display:flex;gap:14px;align-items:center;margin-top:8px;flex-wrap:wrap}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
-input[type=search]{font:inherit;border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%;background:#fff}
+input[type=search],input[type=number],select{font:inherit;border:1px solid #c3c8c0;border-radius:4px;padding:8px 10px;background:#fff;color:var(--ink)}
+input[type=search]{width:100%}
+input:focus,select:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 2px var(--paint)}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.date{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 6px}
-.gm{display:grid;grid-template-columns:1fr auto 1fr auto;gap:12px;align-items:center;padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;margin-bottom:8px}
-.gm:hover{border-color:#fdba74}
-.gm .tm{font-weight:700}
-.gm .tm small{display:block;font-weight:500;color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace}
-.gm .at{color:var(--muted);font-weight:700}
-.gm .time{font-size:12px;color:var(--muted);text-align:right}
+.date{font-family:var(--cond);font-size:20px;font-weight:600;color:var(--ink);margin:22px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+.gm{display:grid;grid-template-columns:1fr 1.5rem 1fr minmax(9rem,14rem);gap:12px;align-items:center;padding:10px 14px;border:1px solid var(--line);border-radius:6px;background:var(--card);cursor:pointer;margin-bottom:6px}
+.gm:hover{border-color:var(--accent)}
+.gm .tm{font-family:var(--cond);font-size:21px;font-weight:700;line-height:1.1}
+.gm .tm small{display:block;font-family:Barlow,sans-serif;font-weight:500;color:var(--muted);font-size:13px}
+.gm .at{color:var(--muted);font-weight:600}
+.gm .time{font-size:13px;color:var(--muted);text-align:right}
+@media(max-width:560px){.gm{grid-template-columns:1fr auto 1fr}.gm .time{grid-column:1/-1;text-align:left}}
 .mh{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center}
 .mh .side{text-align:center}
-.mh .nm{font-size:20px;font-weight:800}
+.mh .nm{font-family:var(--cond);font-size:26px;font-weight:700}
 .mh .rec{color:var(--muted)}
-.vsbox{text-align:center;color:var(--muted);font-weight:800}
-.cmpbar{display:grid;grid-template-columns:70px 1fr 90px 1fr 70px;gap:8px;align-items:center;margin:8px 0}
-.cmpbar .lab{text-align:center;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase}
-.cmpbar .v{font-family:'JetBrains Mono',monospace;font-weight:700}
-.hb{height:10px;border-radius:5px;background:#e2e8f0;position:relative;overflow:hidden}
-.hb i{position:absolute;top:0;bottom:0;border-radius:5px}
-.hb.l i{right:0}.hb.r i{left:0}
-svg text{font-family:Inter,sans-serif}
+.vsbox{text-align:center;color:var(--muted);font-family:var(--cond);font-size:22px;font-weight:600}
+.card.board{background:var(--head);border-color:var(--head);color:#fff;padding:22px 18px 16px}
+.board .nm .link{color:#fff;text-decoration-color:#4c5f7d}
+.board .rec,.board .vsbox,.board .note{color:var(--headsoft)}
+.board .score{font-family:var(--cond);font-size:68px;font-weight:700;line-height:.95;margin:2px 0 6px}
+.board .lead .score{color:var(--accent)}
+@media(max-width:560px){.board .score{font-size:50px}.mh .nm{font-size:22px}}
+.pill{font:inherit;font-size:13px;font-weight:600;padding:5px 10px;border-radius:4px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink)}
+.pill:hover{border-color:var(--accent)}
+.pill.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.calc{border:2px solid var(--ink)}
+svg text{font-family:Barlow,sans-serif}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
-.note{font-size:12px;color:var(--muted)}
-.empty{padding:14px;color:var(--muted);background:#f8fafc;border-radius:8px}
+.note{font-size:13px;color:var(--muted)}
+.empty{padding:14px;color:var(--muted);background:var(--flatbg);border-radius:4px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <header>
-  <h1>Court<span>Lens</span> · NBA Stats Tracker</h1>
+  <h1>CourtLens</h1>
   <nav>
     <a data-nav="#proj">Projections</a>
     <a data-nav="#players">Players</a>
@@ -788,7 +801,7 @@ function vInjuries(){
   const teams=Object.keys(TEAMS).map(t=>({t,list:INJ.filter(i=>i.t===t)})).filter(x=>x.list.length).sort((a,b)=>b.list.filter(i=>i.st==='Out'&&isStar(i.p)).length-a.list.filter(i=>i.st==='Out'&&isStar(i.p)).length||full(a.t).localeCompare(full(b.t)));
   const starsOut=INJ.filter(i=>i.st==='Out'&&isStar(i.p));
   return`<h2>Injuries</h2><p class="sub">From ESPN's NBA injury report. ★ marks star players: over 15 points, 5 assists or 5 rebounds a game this season.</p>
-  <div class="card"><h3>Stars out (${starsOut.length})</h3>${starsOut.length?`<div class="row">${starsOut.map(i=>`<a class="chip down" style="cursor:pointer;font-family:Inter" data-nav="#player-${i.p.id}">${esc(i.p.name)} · ${i.t} · back ~${i.ret}</a>`).join('')}</div>`:'<div class="empty">None.</div>'}</div>
+  <div class="card"><h3>Stars out (${starsOut.length})</h3>${starsOut.length?`<div class="row">${starsOut.map(i=>`<a class="chip down" style="cursor:pointer" data-nav="#player-${i.p.id}">${esc(i.p.name)} · ${i.t} · back ~${i.ret}</a>`).join('')}</div>`:'<div class="empty">None.</div>'}</div>
   ${teams.map(({t,list})=>`<div class="card tw"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${tlink(t)}</h3>${(()=>{const n=nextFor(t);return n?`<span class="note">Next: ${n.h===t?'vs':'@'} ${n.h===t?n.a:n.h} · ${dLong(n.t)}</span>`:''})()}</div>
    <table style="margin-top:8px"><thead><tr><th>Player</th><th class="l">Pos</th><th class="l">Status</th><th class="l">Est. return</th><th>GP</th><th>PTS</th><th>REB</th><th>AST</th><th>MIN</th></tr></thead><tbody>
    ${list.map(i=>`<tr><td>${i.p?plink(i.p):esc(i.name)} ${isStar(i.p)?'<span class="chip" style="background:#fde68a;color:#92400e">★</span>':''}</td><td class="l">${i.pos}</td><td class="l">${i.st==='Out'?'<span class="chip down">Out</span>':'<span class="chip" style="background:#fef3c7;color:#92400e">Day-to-day</span>'}</td><td class="l">${i.ret}</td>${i.p?`<td class="num">${i.p.gp}</td><td class="num">${f1(i.p.avg.pts)}</td><td class="num">${f1(i.p.avg.reb)}</td><td class="num">${f1(i.p.avg.ast)}</td><td class="num">${f1(i.p.avg.min)}</td>`:'<td colspan="5" class="note">no games this season</td>'}</tr>`).join('')}</tbody></table>
@@ -847,7 +860,7 @@ function scatter(TL){
   <text x="${m.l+6}" y="${H-m.b-8}" font-size="11" font-weight="700" fill="#b91c1c">Bad O · Bad D</text>
   <text x="${(W+m.l)/2}" y="${H-4}" font-size="11" fill="#6b7280" text-anchor="middle">Offensive rating →</text>
   <text transform="translate(13 ${H/2}) rotate(-90)" font-size="11" fill="#6b7280" text-anchor="middle">Defensive rating (better ↑)</text>
-  ${TL.map(t=>`<g data-nav="#team-${t.abbr}" style="cursor:pointer"><circle cx="${X(t.ortg)}" cy="${Y(t.drtg)}" r="7" fill="${t.net>=0?'#ea580c':'#64748b'}" stroke="#fff" stroke-width="2"/><text x="${X(t.ortg)+10}" y="${Y(t.drtg)+4}" font-size="11.5" font-weight="700" fill="#121620">${t.abbr}</text><title>${full(t.abbr)}: O ${t.ortg} · D ${t.drtg}</title></g>`).join('')}</svg>`;
+  ${TL.map(t=>`<g data-nav="#team-${t.abbr}" style="cursor:pointer"><circle cx="${X(t.ortg)}" cy="${Y(t.drtg)}" r="7" fill="${t.net>=0?'#e35a12':'#64748b'}" stroke="#fff" stroke-width="2"/><text x="${X(t.ortg)+10}" y="${Y(t.drtg)+4}" font-size="11.5" font-weight="700" fill="#121620">${t.abbr}</text><title>${full(t.abbr)}: O ${t.ortg} · D ${t.drtg}</title></g>`).join('')}</svg>`;
 }
 function vSchedule(){
   let out='',cur='';
@@ -859,7 +872,7 @@ function vGame(id){
   const g=SCHED.find(x=>x.id===id);if(!g)return vSchedule();
   const A=T[g.a],H=T[g.h];
   const bar=(lab,a,h,goodHigh)=>{const mx=Math.max(a,h),mn=Math.min(a,h)-3,wa=(a-mn)/(mx-mn)*100,wh=(h-mn)/(mx-mn)*100,aw=goodHigh?a>h:a<h;
-    return`<div class="cmpbar"><div class="v" style="text-align:right;color:${aw?'var(--good)':'inherit'}">${f1(a)}</div><div class="hb l"><i style="width:${wa}%;background:${aw?'#ea580c':'#94a3b8'}"></i></div><div class="lab">${lab}</div><div class="hb r"><i style="width:${wh}%;background:${!aw?'#ea580c':'#94a3b8'}"></i></div><div class="v" style="color:${!aw?'var(--good)':'inherit'}">${f1(h)}</div></div>`};
+    return`<div class="cmpbar"><div class="v" style="text-align:right;color:${aw?'var(--good)':'inherit'}">${f1(a)}</div><div class="hb l"><i style="width:${wa}%;background:${aw?'#e35a12':'#94a3b8'}"></i></div><div class="lab">${lab}</div><div class="hb r"><i style="width:${wh}%;background:${!aw?'#e35a12':'#94a3b8'}"></i></div><div class="v" style="color:${!aw?'var(--good)':'inherit'}">${f1(h)}</div></div>`};
   const roster=(t)=>{const o=t===g.a?g.h:g.a;const R=rotation(t).filter(p=>stOf(p,g)!=='out');return`<div class="card tw"><h3>${esc(full(t))}</h3><table><thead><tr><th>Player</th><th>MIN</th><th>PTS</th><th>Last 10 PTS</th><th>Last 3 vs ${o}</th><th>REB</th><th>AST</th><th class="l">Form</th></tr></thead><tbody>
    ${R.map(p=>{const l=avgOf(p.l10),vr=p.vs[o]||[],v=vr.length?avgOf(vr):null,fm=form(p);return`<tr class="click" data-nav="#player-${p.id}" data-vs="${o}"><td><b>${esc(p.name)}</b> ${stBadge(stOf(p,g))}</td><td class="num">${f1(p.avg.min)}</td><td class="num"><b>${f1(p.avg.pts)}</b></td><td class="num">${f1(l.pts)} ${dchip(l.pts-p.avg.pts,true,1)}</td><td class="num">${v?f1(v.pts)+' '+dchip(v.pts-p.avg.pts,true,1)+` <span class="note">(${vr.length})</span>`:'<span class="note">no games</span>'}</td><td class="num">${f1(p.avg.reb)}</td><td class="num">${f1(p.avg.ast)}</td><td class="l"><span class="chip ${fm.c}">${fm.t}</span></td></tr>`}).join('')}
    </tbody></table><div class="legend">PTS = season average; chips show the difference from it. (n) = games found vs ${o} since 2024-25. Sorted by minutes.</div></div>`};
@@ -922,8 +935,8 @@ function chart(p,rows){
   let g='';const st=hi-lo>30?10:5;for(let v=Math.ceil(lo/st)*st;v<=hi;v+=st)g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#f1f5f9"/><text x="${m.l-6}" y="${Y(v)+4}" font-size="10" text-anchor="end" fill="#6b7280">${v}</text>`;
   const si=sel[p.id]!=null?n-1-sel[p.id]:-1;
   return`<svg viewBox="0 0 ${W} ${H}" width="100%">${g}<line x1="${m.l}" x2="${W-m.r}" y1="${Y(p.gsAvg)}" y2="${Y(p.gsAvg)}" stroke="#94a3b8" stroke-dasharray="5 4"/>
-  <polyline points="${gs.map((v,i)=>X(i)+','+Y(v)).join(' ')}" fill="none" stroke="#ea580c" stroke-width="2"/>
-  ${o.map((r,i)=>`<g data-selp="${p.id}" data-seli="${n-1-i}" style="cursor:pointer"><circle cx="${X(i)}" cy="${Y(r.gs)}" r="${i===si?7:4.5}" fill="${i===si?'#121620':'#ea580c'}" stroke="#fff" stroke-width="2"/><circle cx="${X(i)}" cy="${Y(r.gs)}" r="13" fill="transparent"/><title>${gDate(r.d)} ${r.home?'vs':'@'} ${r.opp}: ${r.pts} pts, GmSc ${f1(r.gs)}</title></g><text x="${X(i)}" y="${H-8}" font-size="10" text-anchor="middle" fill="#6b7280">${r.opp}</text>`).join('')}</svg>`;
+  <polyline points="${gs.map((v,i)=>X(i)+','+Y(v)).join(' ')}" fill="none" stroke="#e35a12" stroke-width="2"/>
+  ${o.map((r,i)=>`<g data-selp="${p.id}" data-seli="${n-1-i}" style="cursor:pointer"><circle cx="${X(i)}" cy="${Y(r.gs)}" r="${i===si?7:4.5}" fill="${i===si?'#121620':'#e35a12'}" stroke="#fff" stroke-width="2"/><circle cx="${X(i)}" cy="${Y(r.gs)}" r="13" fill="transparent"/><title>${gDate(r.d)} ${r.home?'vs':'@'} ${r.opp}: ${r.pts} pts, GmSc ${f1(r.gs)}</title></g><text x="${X(i)}" y="${H-8}" font-size="10" text-anchor="middle" fill="#6b7280">${r.opp}</text>`).join('')}</svg>`;
 }
 function gamePanel(p,r){
   const v=verdict(p,r);
@@ -949,7 +962,7 @@ function vPlayer(id){
   const kp=[['PTS','pts'],['REB','reb'],['AST','ast'],['STL','stl'],['BLK','blk'],['TOV','tov'],['3PM','tpm'],['MIN','min']];
   const si=sel[p.id];
   const vsCard=upcoming.length?`<div class="card tw"><div class="row" style="justify-content:space-between"><h3 style="margin:0">Last ${vr.length||3} games vs ${esc(full(cur))}${cg?` · ${cg.g===g?'next game':'upcoming'} ${dLong(cg.g.t)}`:''}</h3>
-     <div class="row">${upcoming.map(u=>`<button data-vsp="${p.id}" data-vso="${u.o}" style="font:inherit;font-weight:700;font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid ${u.o===cur?'#ea580c':'var(--line)'};background:${u.o===cur?'#fff7ed':'#fff'};cursor:pointer">${u.g.h===p.team?'vs':'@'} ${u.o} · ${u.g.t.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</button>`).join('')}</div></div>
+     <div class="row">${upcoming.map(u=>`<button data-vsp="${p.id}" data-vso="${u.o}" style="font:inherit;font-weight:700;font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid ${u.o===cur?'#e35a12':'var(--line)'};background:${u.o===cur?'var(--paint)':'#fff'};cursor:pointer">${u.g.h===p.team?'vs':'@'} ${u.o} · ${u.g.t.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</button>`).join('')}</div></div>
      ${vr.length?`<div style="margin-top:12px">${logTable(p,vr,false,true)}</div><div class="grid2" style="margin-top:12px"><div>${cmpTable(p,vr,'vs '+cur)}</div><div class="note" style="padding-top:8px">Regular-season games from 2024-25 onward, most recent first. Older meetings may have been played for a different team.${vr.length<3?` Only ${vr.length} game${vr.length>1?'s':''} found in that window.`:''}</div></div>`
        :`<div class="empty" style="margin-top:12px">No regular-season games against the ${esc(nick(cur))} since 2024-25.</div>`}</div>`:`<div class="card"><div class="empty">No upcoming games in the loaded schedule.</div></div>`;
   return`<span class="back" data-nav="#players">← All players</span>
@@ -961,7 +974,7 @@ function vPlayer(id){
   ${vsCard}
   <div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">Last ${p.l10.length} games vs season average</h3><span class="chip ${fm.c}" style="font-size:13px">Form: ${fm.t}</span></div>
    <div class="grid2" style="margin-top:12px"><div class="tw">${cmpTable(p,p.l10,'Last '+p.l10.length)}</div>
-   <div><h3>Game Score, game by game</h3>${chart(p,p.l10)}<div class="legend"><span><i style="background:#ea580c"></i>Game Score (one number summing up the box score)</span><span><i style="background:#94a3b8"></i>Season average</span></div><p class="note">Click a dot or a row below to break that game down against his averages.</p></div></div></div>
+   <div><h3>Game Score, game by game</h3>${chart(p,p.l10)}<div class="legend"><span><i style="background:#e35a12"></i>Game Score (one number summing up the box score)</span><span><i style="background:#94a3b8"></i>Season average</span></div><p class="note">Click a dot or a row below to break that game down against his averages.</p></div></div></div>
   <div class="card tw"><h3>Game log · last ${p.l10.length}</h3>${logTable(p,p.l10,true,false)}${si!=null&&p.log[si]?gamePanel(p,p.log[si]):''}</div>
   <div class="card tw"><h3>Splits · 2026-27</h3>${splits(p)}</div>
   ${p.log.length>10?`<div class="card tw"><details><summary style="cursor:pointer;font-weight:700">Full 2026-27 game log (${p.log.length} games)</summary><div style="margin-top:10px">${logTable(p,p.log,true,false)}</div></details></div>`:''}`;
@@ -1005,7 +1018,7 @@ function calcCard(){
   const opts=PL.filter(p=>p.avg.min>=5).sort((a,b)=>a.name.localeCompare(b.name)).map(p=>`<option value="${esc(p.name)} (${p.team})"></option>`).join('');
   const cur=CALC.pid!=null?`${PL[CALC.pid].name} (${PL[CALC.pid].team})`:'';
   const inp='font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff';
-  return`<div class="card" style="border:2px solid #fdba74"><h3>Odds calculator</h3>
+  return`<div class="card calc"><h3>Odds calculator</h3>
    <div class="row" style="align-items:flex-end">
     <label style="flex:2;min-width:220px"><div class="note">Player</div><input id="c_pl" list="c_pls" value="${esc(cur)}" placeholder="Start typing a name…" style="${inp};width:100%"><datalist id="c_pls">${opts}</datalist></label>
     <label><div class="note">Stat</div><select id="c_k" style="${inp}">${Object.entries(PSTATS).map(([k,v])=>`<option value="${k}" ${k===CALC.k?'selected':''}>${v.l}</option>`).join('')}</select></label>
@@ -1043,7 +1056,7 @@ function calcOut(){
   let book='';const od=parseFloat(CALC.odds);
   if(isFinite(od)&&od>1){const imp=1/od,diff=pw-imp;book=`<div class="card" style="margin:12px 0 0;background:${diff>0.03?'#f0fdf4':diff<-0.03?'#fef2f2':'#f8fafc'}"><b>Compared with odds of ${od.toFixed(2)}:</b> those odds imply ${Math.round(imp*100)}%. The model says ${Math.round(pw*100)}% — ${Math.abs(diff)<0.03?'about the same':diff>0?`${Math.round(diff*100)} points <b>higher</b>, so by this model the odds look longer than the stats suggest`:`${Math.round(-diff*100)} points <b>lower</b>, so by this model the odds look shorter than the stats suggest`}. Bookmaker odds also include their margin and information this model doesn't have (late injury news, minutes plans).</div>`}
   return`<div class="row" style="gap:12px;margin-bottom:12px">
-    <div class="kpi" style="flex:1;min-width:150px;border-color:#fdba74"><div class="l">${side} ${ln} ${S.l.toLowerCase()}</div><div class="v">${Math.round(pw*100)}%</div><div class="s">fair odds <b>${fair(pw)}</b></div></div>
+    <div class="kpi" style="flex:1;min-width:150px;border-top-color:var(--accent)"><div class="l">${side} ${ln} ${S.l.toLowerCase()}</div><div class="v">${Math.round(pw*100)}%</div><div class="s">fair odds <b>${fair(pw)}</b></div></div>
     <div class="kpi" style="flex:1;min-width:150px"><div class="l">${CALC.side==='over'?'Under':'Over'} ${ln}</div><div class="v">${Math.round((1-pw)*100)}%</div><div class="s">fair odds ${fair(1-pw)}</div></div>
     <div class="kpi" style="flex:1;min-width:150px"><div class="l">Projection</div><div class="v">${f1(pr.proj)}</div><div class="s">${esc(p.name)} ${stBadge(st)}</div></div></div>
    <div class="grid2"><div><h3>Reasoning</h3><ol style="margin:0;padding-left:18px;line-height:1.55">${why.map(w=>`<li>${w}</li>`).join('')}</ol>
@@ -1082,14 +1095,14 @@ function vProj(id){
       <tr><td class="l">Opponent defense</td><td class="num">×${pr.of.toFixed(3)}</td><td class="note l">${pr.of===1?'not applied to this stat':`${pr.opp} def rtg ${f1(T[pr.opp].drtg)} vs league ${f1(LG.d)}`}</td></tr>
       <tr><td class="l">Injury boost</td><td class="num">×${pr.bst.toFixed(3)}</td><td class="note l">${pr.bst>1?'teammates out: '+teamAdj(p.team,g).outs.map(x=>esc(x.name)).join(', '):'no teammates out'}</td></tr>
       <tr class="avg"><td class="l">Projection</td><td class="num">${f1(pr.proj)}</td><td class="note l">${S.dist==='p'?'Poisson model':'normal model, spread ±'+f1(pr.sd)}</td></tr></tbody></table></div>
-     <div><div class="row"><label style="font-weight:700">Line</label><input id="pjline" type="number" step="0.5" value="${ln}" data-pjk="${p.id+k}" style="font:inherit;width:90px;padding:7px 9px;border:1px solid var(--line);border-radius:8px"></div>
+     <div><div class="row"><label style="font-weight:700">Line</label><input id="pjline" type="number" step="0.5" value="${ln}" data-pjk="${p.id+k}" style="width:90px"></div>
       <div id="pjres">${lineRes(p,pr,k,ln)}</div></div></div></div>`}
   return`<h2>Projections</h2><p class="sub">Model estimates for upcoming games, built from the stats in this app. Fair odds = 1 ÷ probability (decimal), with no bookmaker margin.</p>
   ${calcCard()}
-  <div class="card"><div class="row">${up.slice(0,30).map(x=>`<button data-nav="#proj-${x.id}" style="font:inherit;font-size:12px;font-weight:700;padding:6px 10px;border-radius:999px;cursor:pointer;border:1px solid ${x===g?'#ea580c':'var(--line)'};background:${x===g?'#fff7ed':'#fff'}">${x.a} @ ${x.h} · ${x.t.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</button>`).join('')}</div></div>
-  <div class="card"><div class="mh"><div class="side"><div class="nm">${tlink(g.a)}</div><div class="num" style="font-size:26px;font-weight:800">${Math.round(gp.ap)}</div><div class="rec">Win ${Math.round(gp.pa*100)}% · fair ${fair(gp.pa)}</div></div><div class="vsbox">@<div class="note" style="font-weight:600">${glabel(g)}</div></div><div class="side"><div class="nm">${tlink(g.h)}</div><div class="num" style="font-size:26px;font-weight:800">${Math.round(gp.hp)}</div><div class="rec">Win ${Math.round(gp.ph*100)}% · fair ${fair(gp.ph)}</div></div></div>
+  <div class="card"><div class="row">${up.slice(0,30).map(x=>`<button data-nav="#proj-${x.id}" class="pill${x===g?' on':''}">${x.a} @ ${x.h} · ${x.t.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</button>`).join('')}</div></div>
+  <div class="card board"><div class="mh"><div class="side${gp.ap>gp.hp?' lead':''}"><div class="nm">${tlink(g.a)}</div><div class="score">${Math.round(gp.ap)}</div><div class="rec">Win ${Math.round(gp.pa*100)}% · fair ${fair(gp.pa)}</div></div><div class="vsbox">@<div class="note" style="font-weight:600">${glabel(g)}</div></div><div class="side${gp.hp>gp.ap?' lead':''}"><div class="nm">${tlink(g.h)}</div><div class="score">${Math.round(gp.hp)}</div><div class="rec">Win ${Math.round(gp.ph*100)}% · fair ${fair(gp.ph)}</div></div></div>
    <p class="note" style="text-align:center;margin:10px 0 0">Projected total ${f1(gp.total)} · spread ${g.h} ${gp.margin>=0?'-':'+'}${f1(Math.abs(gp.margin))} · pace ${f1(gp.pace)}. Built from both teams' ratings and pace, with 1.4 pts of home advantage each way.</p></div>
-  <div class="card"><div class="row">${Object.entries(PSTATS).filter(([kk,v])=>!v.hide).map(([kk,v])=>`<button data-pjs="${kk}" style="font:inherit;font-weight:700;padding:7px 12px;border-radius:8px;cursor:pointer;border:1px solid ${kk===k?'#ea580c':'var(--line)'};background:${kk===k?'#ea580c':'#fff'};color:${kk===k?'#fff':'inherit'}">${v.l}</button>`).join('')}</div>
+  <div class="card"><div class="row">${Object.entries(PSTATS).filter(([kk,v])=>!v.hide).map(([kk,v])=>`<button data-pjs="${kk}" style="font:inherit;font-weight:700;padding:7px 12px;border-radius:8px;cursor:pointer;border:1px solid ${kk===k?'#e35a12':'var(--line)'};background:${kk===k?'#e35a12':'#fff'};color:${kk===k?'#fff':'inherit'}">${v.l}</button>`).join('')}</div>
    <p class="note" style="margin:10px 0 0">Each cell: chance of going <b>over</b> the line, and the fair decimal odds beneath. Click a player to see how the number was built and to test your own line.</p></div>
   ${(()=>{const c=[g.a,g.h].map(t=>impactCard(t,g)).join('');return c?`<div class="grid2">${c}</div>`:''})()}
   ${det}<div class="grid2">${tbl(g.a)}${tbl(g.h)}</div>
