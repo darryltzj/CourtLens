@@ -18,7 +18,7 @@ nav a:hover{color:#fff}
 nav a.on{color:#fff}
 nav a.on::after{content:'';position:absolute;left:8px;right:8px;bottom:-3px;height:6px;background:var(--accent);border-radius:3px 3px 0 0}
 .asof{margin-left:auto;align-self:center;font-size:13px;color:var(--headsoft)}
-@media(max-width:700px){header{gap:0 16px;padding:0 16px}header h1{font-size:24px}nav{order:3;width:100%;margin:0 -12px}.asof{margin-left:0;font-size:12px;flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}main{padding:18px 16px 40px}h2{font-size:30px}.card{padding:14px}}
+@media(max-width:700px){header{gap:0 16px;padding:0 max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left))}header h1{font-size:24px}nav{order:3;width:calc(100% + 32px);margin:0 -16px;padding:0 6px;justify-content:space-between}nav a{font-size:16.5px;padding:10px 6px 9px}nav a.on::after{left:4px;right:4px}.asof{margin-left:0;font-size:12px;flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}main{padding:16px max(12px,env(safe-area-inset-right)) 40px max(12px,env(safe-area-inset-left))}h2{font-size:28px}.card{padding:12px}}
 main{max-width:1200px;margin:0 auto;padding:24px 20px 48px}
 h2{font-family:var(--cond);font-size:36px;font-weight:700;line-height:1.05;margin:4px 0 6px}
 h3{font-family:var(--cond);font-size:20px;font-weight:600;margin:0 0 10px;color:var(--ink)}
@@ -90,6 +90,49 @@ svg text{font-family:Barlow,sans-serif}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 .note{font-size:13px;color:var(--muted)}
 .empty{padding:14px;color:var(--muted);background:var(--flatbg);border-radius:4px}
+.cmpbar{display:grid;grid-template-columns:70px 1fr 90px 1fr 70px;gap:8px;align-items:center;margin:8px 0}
+.cmpbar .lab{text-align:center;font-family:var(--cond);font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase}
+.cmpbar .v{font-family:var(--cond);font-size:18px;font-weight:700}
+.hb{height:10px;border-radius:5px;background:var(--flatbg);position:relative;overflow:hidden}
+.hb i{position:absolute;top:0;bottom:0;border-radius:5px}
+.hb.l i{right:0}
+.hb.r i{left:0}
+.scrollrow{position:relative}
+#pjdet{scroll-margin-top:110px}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{touch-action:manipulation;-webkit-tap-highlight-color:rgba(227,90,18,.15)}
+@media(hover:none){tr.click:hover td{background:inherit}.gm:hover{border-color:var(--line)}}
+/* ---- phones ---- */
+@media(max-width:700px){
+ body{font-size:14.5px}
+ input[type=search],input[type=number],select,#c_pl{font-size:16px!important} /* stops iOS zoom-on-focus */
+ th,td{padding:6px 6px}
+ th{font-size:14px}
+ .num{font-size:13.5px}
+ .hide-sm{display:none}
+ /* keep the name column visible while a wide table scrolls sideways */
+ .tw table td:first-child,.tw table th:first-child,.card table td:first-child,.card table th:first-child{position:sticky;left:0;z-index:1;background:var(--card);box-shadow:1px 0 0 var(--line);white-space:normal;min-width:96px;max-width:44vw}
+ tr.avg td:first-child{background:var(--flatbg)}
+ tr.click:active td{background:#f1f2ee}
+ .scrollrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -12px;padding:0 12px 2px;-webkit-overflow-scrolling:touch}
+ .scrollrow::-webkit-scrollbar{display:none}
+ .scrollrow>*{flex:0 0 auto}
+ .pill{padding:8px 12px;font-size:14px}
+ .calcf{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+ .calcf label{min-width:0!important}
+ .calcf label:first-child{grid-column:1/-1}
+ .calcf input,.calcf select{width:100%!important}
+ .kpis{grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:4px 14px}
+ .kpi .v{font-size:28px}
+ .cmpbar{grid-template-columns:48px 1fr 64px 1fr 48px;gap:6px}
+ .cmpbar .lab{font-size:12.5px}
+ .bar{width:110px}
+ .row>.kpi{min-width:0!important;flex:1 1 40%!important}
+ .board .vsbox .note{font-size:11px;max-width:6.5rem;margin:4px auto 0}
+ .mh{gap:8px}
+ .vsbox{font-size:18px}
+ .legend{font-size:12.5px;gap:8px 12px}
+}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -695,6 +738,7 @@ let SCHED=[];
 
 /* ===== helpers ===== */
 const $=s=>document.querySelector(s);
+const MOB=()=>matchMedia('(max-width:600px)').matches;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const f1=x=>(x==null||!isFinite(x))?'—':x.toFixed(1);
 const pct=x=>(x==null||!isFinite(x))?'—':(x*100).toFixed(1)+'%';
@@ -841,7 +885,7 @@ function vTeams(){
   <div class="card tw"><table>
    <thead><tr><th>Team</th><th>W-L</th><th>Off rtg</th><th>Def rtg</th><th>Net</th><th>Pace</th><th>PPG</th><th>Opp PPG</th><th>Last 5 net</th><th class="l">Next game</th></tr></thead>
    <tbody>${TL.map(t=>{const g=nextFor(t.abbr);return`<tr class="click" data-nav="#team-${t.abbr}">
-    <td><span class="tabbr">${t.abbr}</span><b>${esc(full(t.abbr))}</b></td><td class="num">${t.w}-${t.l}</td>
+    <td><span class="tabbr">${t.abbr}</span><b class="hide-sm">${esc(full(t.abbr))}</b></td><td class="num">${t.w}-${t.l}</td>
     <td class="num">${f1(t.ortg)} ${rankChip(t.ork)}</td><td class="num">${f1(t.drtg)} ${rankChip(t.drk)}</td>
     <td class="num"><b>${sgn(t.net)}</b></td><td class="num">${f1(t.pace)}</td><td class="num">${f1(t.ppg)}</td><td class="num">${f1(t.oppg)}</td>
     <td>${dchip(t.l5net,true,1)}</td><td class="l">${g?`${g.h===t.abbr?'vs':'@'} ${g.h===t.abbr?g.a:g.h} · ${dLong(g.t)}`:'—'}</td></tr>`}).join('')}</tbody></table>
@@ -849,18 +893,18 @@ function vTeams(){
   <div class="card"><h3>Offense vs defense</h3>${scatter(TL)}<div class="legend">Up and to the right = good at both ends. Dashed lines = league average. Click a team.</div></div>`;
 }
 function scatter(TL){
-  const W=760,H=400,m={l:50,r:24,t:20,b:40},xs=TL.map(t=>t.ortg),ys=TL.map(t=>t.drtg);
+  const mob=MOB(),fz=n=>mob?Math.round(n*1.25):n,W=mob?400:760,H=mob?430:400,m={l:mob?40:50,r:mob?30:24,t:20,b:40},xs=TL.map(t=>t.ortg),ys=TL.map(t=>t.drtg);
   const x0=Math.min(...xs)-1.5,x1=Math.max(...xs)+1.5,y0=Math.min(...ys)-1.5,y1=Math.max(...ys)+1.5;
   const X=v=>m.l+(v-x0)/(x1-x0)*(W-m.l-m.r),Y=v=>m.t+(v-y0)/(y1-y0)*(H-m.t-m.b);
-  let g='';for(let v=Math.ceil(x0/2)*2;v<=x1;v+=2)g+=`<line x1="${X(v)}" x2="${X(v)}" y1="${m.t}" y2="${H-m.b}" stroke="#f1f5f9"/><text x="${X(v)}" y="${H-m.b+16}" font-size="11" fill="#6b7280" text-anchor="middle">${v}</text>`;
-  for(let v=Math.ceil(y0/2)*2;v<=y1;v+=2)g+=`<line y1="${Y(v)}" y2="${Y(v)}" x1="${m.l}" x2="${W-m.r}" stroke="#f1f5f9"/><text x="${m.l-8}" y="${Y(v)+4}" font-size="11" fill="#6b7280" text-anchor="end">${v}</text>`;
+  let g='';for(let v=Math.ceil(x0/2)*2;v<=x1;v+=2)g+=`<line x1="${X(v)}" x2="${X(v)}" y1="${m.t}" y2="${H-m.b}" stroke="#f1f5f9"/><text x="${X(v)}" y="${H-m.b+16}" font-size="${fz(11)}" fill="#6b7280" text-anchor="middle">${v}</text>`;
+  for(let v=Math.ceil(y0/2)*2;v<=y1;v+=2)g+=`<line y1="${Y(v)}" y2="${Y(v)}" x1="${m.l}" x2="${W-m.r}" stroke="#f1f5f9"/><text x="${m.l-8}" y="${Y(v)+4}" font-size="${fz(11)}" fill="#6b7280" text-anchor="end">${v}</text>`;
   return`<svg viewBox="0 0 ${W} ${H}" width="100%">${g}
   <line x1="${X(LG.o)}" x2="${X(LG.o)}" y1="${m.t}" y2="${H-m.b}" stroke="#94a3b8" stroke-dasharray="4 4"/><line y1="${Y(LG.d)}" y2="${Y(LG.d)}" x1="${m.l}" x2="${W-m.r}" stroke="#94a3b8" stroke-dasharray="4 4"/>
-  <text x="${W-m.r-4}" y="${m.t+14}" text-anchor="end" font-size="11" font-weight="700" fill="#15803d">Good O · Good D</text>
-  <text x="${m.l+6}" y="${H-m.b-8}" font-size="11" font-weight="700" fill="#b91c1c">Bad O · Bad D</text>
-  <text x="${(W+m.l)/2}" y="${H-4}" font-size="11" fill="#6b7280" text-anchor="middle">Offensive rating →</text>
-  <text transform="translate(13 ${H/2}) rotate(-90)" font-size="11" fill="#6b7280" text-anchor="middle">Defensive rating (better ↑)</text>
-  ${TL.map(t=>`<g data-nav="#team-${t.abbr}" style="cursor:pointer"><circle cx="${X(t.ortg)}" cy="${Y(t.drtg)}" r="7" fill="${t.net>=0?'#e35a12':'#64748b'}" stroke="#fff" stroke-width="2"/><text x="${X(t.ortg)+10}" y="${Y(t.drtg)+4}" font-size="11.5" font-weight="700" fill="#121620">${t.abbr}</text><title>${full(t.abbr)}: O ${t.ortg} · D ${t.drtg}</title></g>`).join('')}</svg>`;
+  <text x="${W-m.r-4}" y="${m.t+14}" text-anchor="end" font-size="${fz(11)}" font-weight="700" fill="#15803d">Good O · Good D</text>
+  <text x="${m.l+6}" y="${H-m.b-8}" font-size="${fz(11)}" font-weight="700" fill="#b91c1c">Bad O · Bad D</text>
+  <text x="${(W+m.l)/2}" y="${H-4}" font-size="${fz(11)}" fill="#6b7280" text-anchor="middle">Offensive rating →</text>
+  <text transform="translate(13 ${H/2}) rotate(-90)" font-size="${fz(11)}" fill="#6b7280" text-anchor="middle">Defensive rating (better ↑)</text>
+  ${TL.map(t=>`<g data-nav="#team-${t.abbr}" style="cursor:pointer"><circle cx="${X(t.ortg)}" cy="${Y(t.drtg)}" r="${mob?8:7}" fill="${t.net>=0?'#e35a12':'#64748b'}" stroke="#fff" stroke-width="2"/><text x="${X(t.ortg)+10}" y="${Y(t.drtg)+4}" font-size="${fz(11.5)}" font-weight="700" fill="#121620">${t.abbr}</text><title>${full(t.abbr)}: O ${t.ortg} · D ${t.drtg}</title></g>`).join('')}</svg>`;
 }
 function vSchedule(){
   let out='',cur='';
@@ -930,13 +974,13 @@ function logTable(p,rows,selectable,showSeason){
   </tbody></table>`;
 }
 function chart(p,rows){
-  const W=760,H=190,m={l:34,r:14,t:14,b:26},o=[...rows].reverse(),n=o.length,gs=o.map(r=>r.gs);
+  const mob=MOB(),fz=n=>mob?Math.round(n*1.25):n,W=mob?400:760,H=mob?230:190,m={l:34,r:16,t:14,b:26},o=[...rows].reverse(),n=o.length,gs=o.map(r=>r.gs);
   const lo=Math.min(0,...gs,p.gsAvg)-2,hi=Math.max(...gs,p.gsAvg)+2,X=i=>m.l+(n===1?0.5:i/(n-1))*(W-m.l-m.r),Y=v=>H-m.b-(v-lo)/(hi-lo)*(H-m.t-m.b);
-  let g='';const st=hi-lo>30?10:5;for(let v=Math.ceil(lo/st)*st;v<=hi;v+=st)g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#f1f5f9"/><text x="${m.l-6}" y="${Y(v)+4}" font-size="10" text-anchor="end" fill="#6b7280">${v}</text>`;
+  let g='';const st=hi-lo>30?10:5;for(let v=Math.ceil(lo/st)*st;v<=hi;v+=st)g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="#f1f5f9"/><text x="${m.l-6}" y="${Y(v)+4}" font-size="${fz(10)}" text-anchor="end" fill="#6b7280">${v}</text>`;
   const si=sel[p.id]!=null?n-1-sel[p.id]:-1;
   return`<svg viewBox="0 0 ${W} ${H}" width="100%">${g}<line x1="${m.l}" x2="${W-m.r}" y1="${Y(p.gsAvg)}" y2="${Y(p.gsAvg)}" stroke="#94a3b8" stroke-dasharray="5 4"/>
   <polyline points="${gs.map((v,i)=>X(i)+','+Y(v)).join(' ')}" fill="none" stroke="#e35a12" stroke-width="2"/>
-  ${o.map((r,i)=>`<g data-selp="${p.id}" data-seli="${n-1-i}" style="cursor:pointer"><circle cx="${X(i)}" cy="${Y(r.gs)}" r="${i===si?7:4.5}" fill="${i===si?'#121620':'#e35a12'}" stroke="#fff" stroke-width="2"/><circle cx="${X(i)}" cy="${Y(r.gs)}" r="13" fill="transparent"/><title>${gDate(r.d)} ${r.home?'vs':'@'} ${r.opp}: ${r.pts} pts, GmSc ${f1(r.gs)}</title></g><text x="${X(i)}" y="${H-8}" font-size="10" text-anchor="middle" fill="#6b7280">${r.opp}</text>`).join('')}</svg>`;
+  ${o.map((r,i)=>`<g data-selp="${p.id}" data-seli="${n-1-i}" style="cursor:pointer"><circle cx="${X(i)}" cy="${Y(r.gs)}" r="${i===si?7:4.5}" fill="${i===si?'#121620':'#e35a12'}" stroke="#fff" stroke-width="2"/><circle cx="${X(i)}" cy="${Y(r.gs)}" r="13" fill="transparent"/><title>${gDate(r.d)} ${r.home?'vs':'@'} ${r.opp}: ${r.pts} pts, GmSc ${f1(r.gs)}</title></g><text x="${X(i)}" y="${H-8}" font-size="${fz(10)}" text-anchor="middle" fill="#6b7280">${r.opp}</text>`).join('')}</svg>`;
 }
 function gamePanel(p,r){
   const v=verdict(p,r);
@@ -1019,7 +1063,7 @@ function calcCard(){
   const cur=CALC.pid!=null?`${PL[CALC.pid].name} (${PL[CALC.pid].team})`:'';
   const inp='font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff';
   return`<div class="card calc"><h3>Odds calculator</h3>
-   <div class="row" style="align-items:flex-end">
+   <div class="row calcf" style="align-items:flex-end">
     <label style="flex:2;min-width:220px"><div class="note">Player</div><input id="c_pl" list="c_pls" value="${esc(cur)}" placeholder="Start typing a name…" style="${inp};width:100%"><datalist id="c_pls">${opts}</datalist></label>
     <label><div class="note">Stat</div><select id="c_k" style="${inp}">${Object.entries(PSTATS).map(([k,v])=>`<option value="${k}" ${k===CALC.k?'selected':''}>${v.l}</option>`).join('')}</select></label>
     <label><div class="note">Over / under</div><select id="c_side" style="${inp}"><option value="over" ${CALC.side==='over'?'selected':''}>Over</option><option value="under" ${CALC.side==='under'?'selected':''}>Under</option></select></label>
@@ -1099,10 +1143,10 @@ function vProj(id){
       <div id="pjres">${lineRes(p,pr,k,ln)}</div></div></div></div>`}
   return`<h2>Projections</h2><p class="sub">Model estimates for upcoming games, built from the stats in this app. Fair odds = 1 ÷ probability (decimal), with no bookmaker margin.</p>
   ${calcCard()}
-  <div class="card"><div class="row">${up.slice(0,30).map(x=>`<button data-nav="#proj-${x.id}" class="pill${x===g?' on':''}">${x.a} @ ${x.h} · ${x.t.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</button>`).join('')}</div></div>
+  <div class="card"><div class="row scrollrow" id="pjpills">${up.slice(0,30).map(x=>`<button data-nav="#proj-${x.id}" class="pill${x===g?' on':''}">${x.a} @ ${x.h} · ${x.t.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</button>`).join('')}</div></div>
   <div class="card board"><div class="mh"><div class="side${gp.ap>gp.hp?' lead':''}"><div class="nm">${tlink(g.a)}</div><div class="score">${Math.round(gp.ap)}</div><div class="rec">Win ${Math.round(gp.pa*100)}% · fair ${fair(gp.pa)}</div></div><div class="vsbox">@<div class="note" style="font-weight:600">${glabel(g)}</div></div><div class="side${gp.hp>gp.ap?' lead':''}"><div class="nm">${tlink(g.h)}</div><div class="score">${Math.round(gp.hp)}</div><div class="rec">Win ${Math.round(gp.ph*100)}% · fair ${fair(gp.ph)}</div></div></div>
    <p class="note" style="text-align:center;margin:10px 0 0">Projected total ${f1(gp.total)} · spread ${g.h} ${gp.margin>=0?'-':'+'}${f1(Math.abs(gp.margin))} · pace ${f1(gp.pace)}. Built from both teams' ratings and pace, with 1.4 pts of home advantage each way.</p></div>
-  <div class="card"><div class="row">${Object.entries(PSTATS).filter(([kk,v])=>!v.hide).map(([kk,v])=>`<button data-pjs="${kk}" style="font:inherit;font-weight:700;padding:7px 12px;border-radius:8px;cursor:pointer;border:1px solid ${kk===k?'#e35a12':'var(--line)'};background:${kk===k?'#e35a12':'#fff'};color:${kk===k?'#fff':'inherit'}">${v.l}</button>`).join('')}</div>
+  <div class="card"><div class="row scrollrow">${Object.entries(PSTATS).filter(([kk,v])=>!v.hide).map(([kk,v])=>`<button data-pjs="${kk}" style="font:inherit;font-weight:700;padding:7px 12px;border-radius:8px;cursor:pointer;border:1px solid ${kk===k?'#e35a12':'var(--line)'};background:${kk===k?'#e35a12':'#fff'};color:${kk===k?'#fff':'inherit'}">${v.l}</button>`).join('')}</div>
    <p class="note" style="margin:10px 0 0">Each cell: chance of going <b>over</b> the line, and the fair decimal odds beneath. Click a player to see how the number was built and to test your own line.</p></div>
   ${(()=>{const c=[g.a,g.h].map(t=>impactCard(t,g)).join('');return c?`<div class="grid2">${c}</div>`:''})()}
   ${det}<div class="grid2">${tbl(g.a)}${tbl(g.h)}</div>
@@ -1124,6 +1168,7 @@ function render(){
   $('#view').innerHTML=base==='injuries'?vInjuries():base==='proj'?vProj(arg):base==='team'?vTeam(arg):base==='game'?vGame(arg):base==='player'?vPlayer(arg):base==='players'?vPlayers():base==='schedule'?vSchedule():base==='teams'?vTeams():vProj(arg);
   const li=$('#pjline');if(li)li.oninput=()=>{const v=parseFloat(li.value);if(!isFinite(v))return;PJ.line[li.dataset.pjk]=v;const x=PL[PJ.pl],g=SCHED.find(z=>z.id===(arg||'')) ||SCHED.filter(z=>z.t>NOW-3*3600e3)[0];const pr=pproj(x,g,PJ.stat);$('#pjres').innerHTML=lineRes(x,pr,PJ.stat,v)};
   if(base==='proj'||base===''||!['team','game','player','players','schedule','teams','injuries'].includes(base))wireCalc();
+  const pr=$('#pjpills'),po=pr&&pr.querySelector('.pill.on');if(po)pr.scrollLeft=po.offsetLeft-pr.clientWidth/2+po.offsetWidth/2;
   if(base==='players'){const el=$('#pq');el.oninput=()=>{pq=el.value;const c=el.selectionStart;render();const e2=$('#pq');e2.focus();e2.setSelectionRange(c,c)}}
 }
 document.addEventListener('click',e=>{
@@ -1136,6 +1181,7 @@ document.addEventListener('click',e=>{
   if(a){e.preventDefault();e.stopPropagation();const h=a.dataset.nav;const m=h.match(/^#player-(\d+)$/);if(m&&a.dataset.vs)vsSel[+m[1]]=a.dataset.vs;if(location.hash===h)render();else location.hash=h;scrollTo(0,0)}
 });
 addEventListener('hashchange',render);
+let lastMob=MOB();addEventListener('resize',()=>{const m=MOB();if(m!==lastMob){lastMob=m;const y=scrollY;render();scrollTo(0,y)}});
 render();
 </script>
 </body>
